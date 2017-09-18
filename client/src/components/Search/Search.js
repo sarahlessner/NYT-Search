@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../../components/Grid";
 import { List, ListItem } from "../../components/List";
 import { Input, FormBtn } from "../../components/Form";
+import SaveBtn from "../SaveBtn";
+
 import Saved from "../Saved";
 
 class Search extends Component {
@@ -11,7 +13,8 @@ class Search extends Component {
     articles: [],
     topic: "",
     startyear: "",
-    endyear: ""
+    endyear: "",
+    searchClicked: false
   };
 
   handleInputChange = event => {
@@ -33,12 +36,14 @@ class Search extends Component {
         .catch(err => console.log(article));
   };
 
+
+
   handleFormSubmit = event => {
     // When the form is submitted, prevent its default behavior, get articles and update the articles state
     event.preventDefault();
     API.searchArticle(this.state.topic, this.state.startyear, this.state.endyear)
       // .then(res => console.log("HANDLEFORMSUBMIT RESULTS IN SEARCH.JS", res.data.response.docs))
-      .then(res => this.setState({ articles: res.data.response.docs, topic: "", startyear: "", endyear: "" }))
+      .then(res => this.setState({ articles: res.data.response.docs, topic: "", startyear: "", endyear: "", searchClicked: true }))
 
       .catch(err => console.log(err));
       // console.log("ARTICLES STATE FROM SEARCH.JS", this.state.articles);
@@ -84,29 +89,40 @@ class Search extends Component {
               </Col>
               </Row>
 
-          </Container>
-          <Container fluid>
-            <Row>
-              <Col size="md-12">
-               {this.state.articles.length ? (
-                <List>
-                  {this.state.articles.map(article => (
+            </Container>
+            <Container fluid>
+              <Row>
+                <Col size="md-12">
+                 {this.state.articles.length ? (
+                  <div>
+                    <h2>Search Results</h2>
+                    <List>
+                      {this.state.articles.map(article => (
 
-                    <ListItem key={article._id}>
+                        <ListItem key={article._id}>
+                        <Link target="_blank" to={article.web_url}>
+                          <strong>
+                            {article.headline.main}
+                          </strong>
+                        </Link>
+                        <br />
+                          {article.pub_date}
+                          <SaveBtn onClick={() => this.saveArticle({article})} />
 
-                      {article.headline.main}
-                      {article.web_url}
-                      {article.pub_date}
-                      <FormBtn onClick={() => this.saveArticle({article})} />
-                    </ListItem>
-                  ))}
-                </List>
-              ) : (
-                <h3>No Search Results to Display</h3>
-              )}
-          </Col>
-        </Row>
-      </Container>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </div>
+                ) : (
+                  <h3>{this.state.searchClicked ? (
+                    "No Results Found"
+                  ) : (
+                    ""
+                  )} </h3>
+                )}
+            </Col>
+          </Row>
+        </Container>
 
       </Container>
     );

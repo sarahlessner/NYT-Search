@@ -21,7 +21,11 @@
 }
 
 .list-overflow-container li a {
-  color: #2A878C;
+  color: #798bb1;
+}
+
+.list-overflow-container li a:hover {
+  color: lightgray;
 }
 
 .list-overflow-container li:first-child {

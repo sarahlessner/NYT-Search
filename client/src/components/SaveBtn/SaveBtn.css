@@ -1,6 +1,6 @@
-.delete-btn {
+.save-btn {
   float: right;
+  color: #22b24c;
   border: none;
-  color: black;
   background-color: inherit;
 }
